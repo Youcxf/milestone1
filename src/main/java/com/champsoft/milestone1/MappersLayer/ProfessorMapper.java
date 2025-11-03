@@ -6,6 +6,7 @@ import com.champsoft.milestone1.DataAccessLayer.Professor;
 import com.champsoft.milestone1.PresentationLayer.DepartmentSummary;
 import com.champsoft.milestone1.PresentationLayer.ProfessorRequestModel;
 import com.champsoft.milestone1.PresentationLayer.ProfessorResponseModel;
+import com.champsoft.milestone1.PresentationLayer.ProfessorWithDepartmentResponseDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,6 +36,27 @@ public class ProfessorMapper {
         professor.setDepartment(departmentRepository.getById(p.getDepartmentId()));
 
         return professor;
+    }
+
+    public ProfessorWithDepartmentResponseDTO toProfessorWithDepartment(Professor p) {
+        Department department = p.getDepartment();
+        DepartmentSummary departmentSummary = null;
+
+        if (department != null) {
+            departmentSummary = new DepartmentSummary(
+                    department.getDepartmentId(),
+                    department.getDepartmentName(),
+                    department.getDepartmentBuilding()
+            );
+        }
+
+        return new ProfessorWithDepartmentResponseDTO(
+                p.getProfessorId(),
+                p.getProfessorEmail(),
+                p.getProfessorName(),
+                p.getProfessorPhoneNumber(),
+                departmentSummary
+        );
     }
 
 }

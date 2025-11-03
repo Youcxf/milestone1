@@ -1,12 +1,11 @@
 package com.champsoft.milestone1.BusinessLogicLayer;
 
-import com.champsoft.milestone1.DataAccessLayer.Department;
 import com.champsoft.milestone1.DataAccessLayer.Professor;
 import com.champsoft.milestone1.DataAccessLayer.ProfessorRepository;
 import com.champsoft.milestone1.MappersLayer.ProfessorMapper;
-import com.champsoft.milestone1.PresentationLayer.DepartmentSummary;
 import com.champsoft.milestone1.PresentationLayer.ProfessorRequestModel;
 import com.champsoft.milestone1.PresentationLayer.ProfessorResponseModel;
+import com.champsoft.milestone1.PresentationLayer.ProfessorWithDepartmentResponseDTO;
 import com.champsoft.milestone1.utilities.ProfessorNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +43,13 @@ public class ProfessorService {
         return this.professorMapper.toResponse(professor.get());
     }
 
+    public ProfessorWithDepartmentResponseDTO getProfessorWithDepartment(String id) {
+        long idLong = Long.parseLong(id);
+        Professor professor = professorRepository.findById(idLong)
+                .orElseThrow(() -> new ProfessorNotFoundException("Professor with id: " + idLong + " not found"));
+        return professorMapper.toProfessorWithDepartment(professor);
+    }
+
     public ProfessorResponseModel createProfessor(ProfessorRequestModel professorData) {
         return this.professorMapper.toResponse(
                 professorRepository.save(this.professorMapper.fromRequestModelToEntity(professorData))
@@ -51,15 +57,25 @@ public class ProfessorService {
     }
 
     public ProfessorResponseModel updateProfessor(String id, ProfessorRequestModel professorData) {
+        long idLong = Long.parseLong(id);
+
+        // Check if professor exists
+        if (!professorRepository.existsById(idLong)) {
+            throw new ProfessorNotFoundException("Professor with id: " + idLong + " not found");
+        }
+
         Professor newProfessor = this.professorMapper.fromRequestModelToEntity(professorData);
-        newProfessor.setProfessorId(Long.parseLong(id));
+        newProfessor.setProfessorId(idLong);
         return professorMapper.toResponse(professorRepository.save(newProfessor));
     }
 
-    public Professor deleteProfessor(String id) {
+    public void deleteProfessor(String id) {
         long idLong = Long.parseLong(id);
-        Professor professor = this.professorRepository.findById(idLong).get();
-        professorRepository.delete(professor);
-        return professor;
+
+        if (!professorRepository.existsById(idLong)) {
+            throw new ProfessorNotFoundException("Professor with id: " + idLong + " not found");
+        }
+
+        professorRepository.deleteById(idLong);
     }
 }

@@ -1,83 +1,66 @@
 package com.champsoft.milestone1.PresentationLayer;
 
 import com.champsoft.milestone1.BusinessLogicLayer.DepartmentService;
-import com.champsoft.milestone1.MappersLayer.DepartmentMapper;
-import com.champsoft.milestone1.utilities.InvalidDepartmentDataException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequestMapping("/departments")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
-    private final DepartmentMapper departmentMapper;
 
-    public DepartmentController(DepartmentService departmentService, DepartmentMapper departmentMapper) {
+    public DepartmentController(DepartmentService departmentService) {
         this.departmentService = departmentService;
-        this.departmentMapper = departmentMapper;
     }
 
-    @GetMapping("/departments")
-    public List<DepartmentResponseModel> getDepartments() {
-        return this.departmentService.getAllDepartments();
+    @GetMapping
+    public ResponseEntity<List<DepartmentResponseModel>> getDepartments() {
+        List<DepartmentResponseModel> departments = this.departmentService.getAllDepartments();
+        return ResponseEntity.ok(departments);
     }
 
-    @PostMapping("/departments")
-    public ResponseEntity<DepartmentResponseModel> createDepartment(@RequestBody DepartmentRequestModel departmentData) {
-        try {
-            DepartmentResponseModel savedDepartment = this.departmentService.createDepartment(departmentData);
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()                      // current request -> /departments
-                    .path("/{id}")                             // append /{id}
-                    .buildAndExpand(savedDepartment.getId())   // substitute {id}
-                    .toUri();
-            return ResponseEntity.created(location).body(savedDepartment);
-        } catch (Exception e) {
-            throw new InvalidDepartmentDataException("Invalid department data");
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<DepartmentResponseModel> getDepartmentById(@PathVariable String id) {
+        DepartmentResponseModel department = this.departmentService.getDepartmentById(id);
+        return ResponseEntity.ok(department);
     }
 
-    @GetMapping("/departments/{id}")
-    public DepartmentResponseModel getDepartmentById(@PathVariable String id) {
-        try {
-            return this.departmentService.getDepartmentById(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "Invalid department ID");
-        }
+    @GetMapping("/{id}/professors")
+    public ResponseEntity<DepartmentWithProfessorsResponseDTO> getDepartmentWithProfessors(@PathVariable String id) {
+        DepartmentWithProfessorsResponseDTO department = this.departmentService.getDepartmentWithProfessors(id);
+        return ResponseEntity.ok(department);
     }
 
-    @PutMapping("/departments/{id}")
-    public ResponseEntity<DepartmentResponseModel> updateDepartment(@PathVariable String id, @RequestBody DepartmentRequestModel departmentData) {
-        try {
-            DepartmentResponseModel savedDepartment = this.departmentService.updateDepartment(id, departmentData);
-            return ResponseEntity.ok(savedDepartment);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "Invalid department data");
-        }
+    @PostMapping
+    public ResponseEntity<DepartmentResponseModel> createDepartment(@Valid @RequestBody DepartmentRequestModel departmentData) {
+        DepartmentResponseModel savedDepartment = this.departmentService.createDepartment(departmentData);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedDepartment.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(savedDepartment);
     }
 
-    @DeleteMapping("/departments/{id}")
+    @PutMapping("/{id}")
+    public ResponseEntity<DepartmentResponseModel> updateDepartment(
+            @PathVariable String id,
+            @Valid @RequestBody DepartmentRequestModel departmentData) {
+        DepartmentResponseModel savedDepartment = this.departmentService.updateDepartment(id, departmentData);
+        return ResponseEntity.ok(savedDepartment);
+    }
+
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDepartment(@PathVariable String id) {
-        try {
-            this.departmentService.deleteDepartmentById(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "Invalid department ID");
-        }
-    }
-
-    @GetMapping("/departments/{id}/professors")
-    public List<ProfessorResponseModel> getProfessors(@PathVariable String id) {
-        try {
-            return departmentService.getProfessors(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "Invalid department ID");
-        }
+    public ResponseEntity<Void> deleteDepartment(@PathVariable String id) {
+        this.departmentService.deleteDepartmentById(id);
+        return ResponseEntity.noContent().build();
     }
 }

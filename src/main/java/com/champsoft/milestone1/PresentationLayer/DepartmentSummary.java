@@ -1,4 +1,5 @@
 package com.champsoft.milestone1.PresentationLayer;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DepartmentSummary {
-    Long id;
-    String name;
-    int building;
+    private Long id;
+    private String departmentName;
+    private int departmentBuilding;
 }

@@ -2,16 +2,14 @@ package com.champsoft.milestone1.BusinessLogicLayer;
 
 import com.champsoft.milestone1.DataAccessLayer.Department;
 import com.champsoft.milestone1.DataAccessLayer.DepartmentRepository;
-import com.champsoft.milestone1.DataAccessLayer.Professor;
 import com.champsoft.milestone1.DataAccessLayer.ProfessorRepository;
 import com.champsoft.milestone1.MappersLayer.DepartmentMapper;
 import com.champsoft.milestone1.MappersLayer.ProfessorMapper;
 import com.champsoft.milestone1.PresentationLayer.DepartmentRequestModel;
 import com.champsoft.milestone1.PresentationLayer.DepartmentResponseModel;
-import com.champsoft.milestone1.PresentationLayer.ProfessorResponseModel;
+import com.champsoft.milestone1.PresentationLayer.DepartmentWithProfessorsResponseDTO;
 import com.champsoft.milestone1.utilities.DepartmentNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,14 +43,21 @@ public class DepartmentService {
         return departmentResponseModels;
     }
 
-    public DepartmentResponseModel getDepartmentById(@PathVariable String id) {
+    public DepartmentResponseModel getDepartmentById(String id) {
         long idLong = Long.parseLong(id);
         Optional<Department> department = departmentRepository.findById(idLong);
 
         if (department.isEmpty()) {
-            throw new DepartmentNotFoundException("Department not found");
+            throw new DepartmentNotFoundException("Department with id: " + idLong + " not found");
         }
         return departmentMapper.toResponse(department.get());
+    }
+
+    public DepartmentWithProfessorsResponseDTO getDepartmentWithProfessors(String id) {
+        long idLong = Long.parseLong(id);
+        Department department = departmentRepository.findById(idLong)
+                .orElseThrow(() -> new DepartmentNotFoundException("Department with id: " + idLong + " not found"));
+        return departmentMapper.toDepartmentWithProfessors(department);
     }
 
     public DepartmentResponseModel createDepartment(DepartmentRequestModel departmentData) {
@@ -61,8 +66,15 @@ public class DepartmentService {
     }
 
     public DepartmentResponseModel updateDepartment(String id, DepartmentRequestModel departmentData) {
+        long idLong = Long.parseLong(id);
+
+        // Check if department exists
+        if (!departmentRepository.existsById(idLong)) {
+            throw new DepartmentNotFoundException("Department with id: " + idLong + " not found");
+        }
+
         Department department = departmentMapper.fromRequestModelToEntity(departmentData);
-        department.setDepartmentId(Long.parseLong(id));
+        department.setDepartmentId(idLong);
         return departmentMapper.toResponse(departmentRepository.save(department));
     }
 
@@ -72,18 +84,7 @@ public class DepartmentService {
         if(departmentRepository.existsById(longId)) {
             departmentRepository.deleteById(longId);
         } else {
-            throw new DepartmentNotFoundException("Department not found");
+            throw new DepartmentNotFoundException("Department with id: " + longId + " not found");
         }
-    }
-
-    public List<ProfessorResponseModel> getProfessors(String id) {
-        Department department = departmentRepository.findById(Long.parseLong(id)).get();
-        List<ProfessorResponseModel> professorResponseModels = new ArrayList<>();
-
-        department.getProfessors().forEach(professor -> {
-            professorResponseModels.add(professorMapper.toResponse(professor));
-        });
-
-        return professorResponseModels;
     }
 }

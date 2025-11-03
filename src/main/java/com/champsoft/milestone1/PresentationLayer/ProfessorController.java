@@ -3,6 +3,7 @@ package com.champsoft.milestone1.PresentationLayer;
 import com.champsoft.milestone1.BusinessLogicLayer.ProfessorService;
 import com.champsoft.milestone1.MappersLayer.ProfessorMapper;
 import com.champsoft.milestone1.utilities.InvalidProfessorDataException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class ProfessorController {
     }
 
     @PostMapping("/professors")
-    public ResponseEntity<ProfessorResponseModel> createProfessor(@RequestBody ProfessorRequestModel professorData) {
+    public ResponseEntity<ProfessorResponseModel> createProfessor(@Valid @RequestBody ProfessorRequestModel professorData) {
         try {
             ProfessorResponseModel savedProfessor = this.professorService.createProfessor(professorData);
             // build Location: /professors/{id}
@@ -46,7 +47,7 @@ public class ProfessorController {
     }
 
     @GetMapping("/professors/{id}")
-    public ProfessorResponseModel getProfessorById(@PathVariable String id) {
+    public ProfessorResponseModel getProfessorById(@Valid @PathVariable String id) {
         try {
             ProfessorResponseModel professorID = this.professorService.getProfessorById(id);
             return professorID;

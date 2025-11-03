@@ -9,8 +9,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProfessorSummary {
+public class ProfessorWithDepartmentResponseDTO {
     private Long id;
-    private String professorName;
     private String email;
+    private String professorName;
+    private String professorPhoneNumber;
+    private DepartmentSummary department;
 }

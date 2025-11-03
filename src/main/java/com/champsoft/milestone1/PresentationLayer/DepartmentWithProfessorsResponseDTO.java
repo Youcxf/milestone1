@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProfessorSummary {
+public class DepartmentWithProfessorsResponseDTO {
     private Long id;
-    private String professorName;
-    private String email;
+    private String departmentName;
+    private int departmentBuilding;
+    private List<ProfessorSummary> professors;
 }
