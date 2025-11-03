@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 public class DepartmentResponseModel {
     Long id;
-    String name;
-    int building;
-
+    String departmentName;
+    int departmentBuilding;
 }

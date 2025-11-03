@@ -30,18 +30,7 @@ public class ProfessorService {
         List<ProfessorResponseModel> professorResponseModels = new ArrayList<>();
 
         for(Professor professor : professors) {
-            Department temp = professor.getDepartment();
-            DepartmentSummary departmentSummary = new DepartmentSummary();
-            departmentSummary.setId(temp.getDepartmentId());
-            departmentSummary.setBuilding(temp.getDepartmentBuilding());
-
-            professorResponseModels.add(new ProfessorResponseModel(
-                    professor.getProfessorId(),
-                    professor.getProfessorEmail(),
-                    professor.getProfessorName(),
-                    professor.getProfessorPhoneNumber(),
-                    departmentSummary.getId()
-            ));
+            professorResponseModels.add(professorMapper.toResponse(professor));
         }
         return professorResponseModels;
     }

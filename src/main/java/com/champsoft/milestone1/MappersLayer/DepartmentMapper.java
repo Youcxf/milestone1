@@ -18,9 +18,8 @@ public class DepartmentMapper {
 
     public Department fromRequestModelToEntity(DepartmentRequestModel d) {
         Department department = new Department();
-        department.setDepartmentName(d.getName());
-        department.setDepartmentBuilding(d.getBuilding());
-
+        department.setDepartmentName(d.getDepartmentName());  // Changed
+        department.setDepartmentBuilding(d.getDepartmentBuilding());  // Changed
         return department;
     }
 }

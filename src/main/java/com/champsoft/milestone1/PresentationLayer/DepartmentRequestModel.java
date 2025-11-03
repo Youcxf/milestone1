@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DepartmentRequestModel {
-    String name;
-    int building;
+    String departmentName;
+    int departmentBuilding;
 
 }
