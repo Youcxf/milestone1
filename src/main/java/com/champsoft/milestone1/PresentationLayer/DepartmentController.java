@@ -26,13 +26,13 @@ public class DepartmentController {
         return ResponseEntity.ok(departments);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/departments/{id}")
     public ResponseEntity<DepartmentResponseModel> getDepartmentById(@PathVariable String id) {
         DepartmentResponseModel department = this.departmentService.getDepartmentById(id);
         return ResponseEntity.ok(department);
     }
 
-    @GetMapping("/{id}/professors")
+    @GetMapping("/departments/{id}/professors")
     public ResponseEntity<DepartmentWithProfessorsResponseDTO> getDepartmentWithProfessors(@PathVariable String id) {
         DepartmentWithProfessorsResponseDTO department = this.departmentService.getDepartmentWithProfessors(id);
         return ResponseEntity.ok(department);
@@ -49,7 +49,7 @@ public class DepartmentController {
         return ResponseEntity.created(location).body(savedDepartment);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/departments/{id}")
     public ResponseEntity<DepartmentResponseModel> updateDepartment(
             @PathVariable String id,
             @Valid @RequestBody DepartmentRequestModel departmentData) {
@@ -57,7 +57,7 @@ public class DepartmentController {
         return ResponseEntity.ok(savedDepartment);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/departments/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteDepartment(@PathVariable String id) {
         this.departmentService.deleteDepartmentById(id);
