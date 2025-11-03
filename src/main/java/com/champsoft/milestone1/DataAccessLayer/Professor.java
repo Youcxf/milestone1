@@ -12,6 +12,9 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Professor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,20 +24,16 @@ public class Professor {
     @Email
     private String professorEmail;
     @Positive
-    private int professorPhoneNumber;
-
+    private String professorPhoneNumber;
     @ManyToOne
     private Department department;
 
-    public Professor(Department department, String professorEmail, long professorId, String professorName, int professorPhoneNumber) {
-        this.department = department;
+    public Professor(String professorEmail, String professorName, String professorPhoneNumber) {
+
         this.professorEmail = professorEmail;
-        this.professorId = professorId;
         this.professorName = professorName;
         this.professorPhoneNumber = professorPhoneNumber;
     }
 
-    public Professor() {
 
-    }
 }

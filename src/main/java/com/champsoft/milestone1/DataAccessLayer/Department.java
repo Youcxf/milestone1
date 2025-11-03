@@ -15,6 +15,9 @@ import java.util.Set;
 
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Department {
 
     @Id
@@ -25,13 +28,13 @@ public class Department {
     private int departmentBuilding;
 
 
-    @OneToMany(mappedBy = "departmentId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Professor> professors = new HashSet<>();
 
-    public Department(int departmentBuilding, Long departmentId, String departmentName, Set<Professor> professors) {
+    public Department(int departmentBuilding, String departmentName) {
         this.departmentBuilding = departmentBuilding;
-        this.departmentId = departmentId;
         this.departmentName = departmentName;
-        this.professors = professors;
     }
+
+
 }

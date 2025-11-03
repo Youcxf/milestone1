@@ -1,0 +1,15 @@
+package com.champsoft.milestone1.PresentationLayer;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class DepartmentRequestModel {
+    String name;
+    int building;
+
+}
