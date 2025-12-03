@@ -10,7 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "https://milestoneyoucefelias-j2cb.vercel.app/"})
 @RestController
 @RequestMapping("/professors")
 public class ProfessorController {
