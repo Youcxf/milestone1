@@ -28,6 +28,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.30' // Use the latest version
     runtimeOnly 'com.h2database:h2'
     implementation('org.springframework.boot:spring-boot-starter-validation')
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
 }
 

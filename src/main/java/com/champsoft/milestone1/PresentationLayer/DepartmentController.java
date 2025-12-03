@@ -10,10 +10,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/departments")
 public class DepartmentController {
-
+    
     private final DepartmentService departmentService;
 
     public DepartmentController(DepartmentService departmentService) {
@@ -26,13 +27,13 @@ public class DepartmentController {
         return ResponseEntity.ok(departments);
     }
 
-    @GetMapping("/departments/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<DepartmentResponseModel> getDepartmentById(@PathVariable String id) {
         DepartmentResponseModel department = this.departmentService.getDepartmentById(id);
         return ResponseEntity.ok(department);
     }
 
-    @GetMapping("/departments/{id}/professors")
+    @GetMapping("/{id}/professors")
     public ResponseEntity<DepartmentWithProfessorsResponseDTO> getDepartmentWithProfessors(@PathVariable String id) {
         DepartmentWithProfessorsResponseDTO department = this.departmentService.getDepartmentWithProfessors(id);
         return ResponseEntity.ok(department);
@@ -49,7 +50,7 @@ public class DepartmentController {
         return ResponseEntity.created(location).body(savedDepartment);
     }
 
-    @PutMapping("/departments/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<DepartmentResponseModel> updateDepartment(
             @PathVariable String id,
             @Valid @RequestBody DepartmentRequestModel departmentData) {
@@ -57,7 +58,7 @@ public class DepartmentController {
         return ResponseEntity.ok(savedDepartment);
     }
 
-    @DeleteMapping("/departments/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteDepartment(@PathVariable String id) {
         this.departmentService.deleteDepartmentById(id);
